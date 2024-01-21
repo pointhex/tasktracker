@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Hello world!!!</title>
+</head>
+
+<body>
+    <!-- <script type="module" src="./js/task.js"></script> -->
+    <script type="module" src="./js/logic.js"></script>
+    <div id="AddTask" class="AddTask">
+        <input type="text" id="TaskName" placeholder="Task name">
+        <input type="text" id="TaskDescription" placeholder="Task description">
+        <button id="AddTaskButton" onclick="AddTaskFunc()">Add task</button>
+    </div>
+    <div class="parent">
+        <div id="ToDoList" ondragover="allowDrop(event)" ondrop="drop(event)">
+            <!-- <div id="rectangle1" class = "task" ondragstart="drag(event)" draggable="true">
+                <p style="color: white; font-size: 24px; text-align: center;">Task1</p>
+            </div>
+            <div id="rectangle2" class = "task" ondragstart="drag(event)" draggable="true">
+                <p style="color: white; font-size: 24px; text-align: center;">Task2</p>
+            </div>
+            <div id="rectangle3" class = "task" ondragstart="drag(event)" draggable="true">
+                <p style="color: white; font-size: 24px; text-align: center;">Task3</p>
+            </div> -->
+        </div>
+        <div id="DoneList" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+    </div>
+</body>
+
+</html>
