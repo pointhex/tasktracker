@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -29,8 +28,11 @@ let tasks = {
 
 app.post('/tasks', (req, res) => {
     const dataFromFrontend = req.body;
-    // tasks.push({ id: uuidv4(), name: dataFromFrontend.taskName, description: dataFromFrontend.taskDescription });
-    tasks[uuidv4()] = { id: uuidv4(), name: dataFromFrontend.taskName, description: dataFromFrontend.taskDescription };
+    tasks[dataFromFrontend.id] = {
+        id: dataFromFrontend.id,
+        name: dataFromFrontend.taskName,
+        description: dataFromFrontend.taskDescription
+    };
     console.log('Data received from front-end:', dataFromFrontend);
 
     // Process the data or send a response back to the front end
@@ -39,7 +41,6 @@ app.post('/tasks', (req, res) => {
 
 
 app.get('/tasks', (req, res) => {
-    // res.json(tasks);
     return res.json(Object.values(tasks));
 });
 

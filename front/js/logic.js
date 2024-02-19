@@ -1,6 +1,8 @@
 import Task from './task.js';
+// import { v4 as uuidv4 } from 'https://esm.sh/uuid';
+// const { v4 } = require('uuid');
 
-var numberOfTasks = 1;
+var numberOfTasks = 2;
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
@@ -24,13 +26,8 @@ window.AddTaskFunc = function () {
     const taskName = taskNameInput.value || 'Task' + numberOfTasks++;
     const taskDescription = taskDescriptionInput.value || 'Task' + numberOfTasks;
 
-    const task = new Task('ToDoList', taskName, 'task' + numberOfTasks);
-
-    console.log("AddTaskFunc");
-
-    // test
-    // const dataToSend = { message: 'Hello from the frontend!' };
-    const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false};
+    const task = new Task('ToDoList', taskName, 'task' + numberOfTasks, numberOfTasks);
+    const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false, id: task.id };
 
     fetch('http://localhost:3000/tasks', {
         method: 'POST',
@@ -63,9 +60,9 @@ function requestData() {
             console.log('Data received from backend:', data);
             data.forEach(task => {
                 if (task.done) {
-                    return new Task('DoneList', task.name, 'task' + numberOfTasks++);
+                    return new Task('DoneList', task.name, 'task' + task.id, task.id);
                 }
-                new Task('ToDoList', task.name, 'task' + numberOfTasks++);
+                new Task('ToDoList', task.name, 'task' + task.id, task.id);
             });
             // Handle the data as needed
         })
