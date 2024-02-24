@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
+import models from '../database/models/index.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,6 +11,12 @@ const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, '../front')));
 app.use(express.json());
+app.use((req, res, next) => {
+    req.context = {
+        models
+    };
+    next();
+});
 // app.use(cors());
 
 // Handle requests to the root URL
@@ -20,38 +28,33 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
-
-let tasks = {
-    1: { id: '1', name: 'task1', description: 'description1', done: false },
-    2: { id: '2', name: 'task2', description: 'description2', done: true }
-};
-
 app.post('/tasks', (req, res) => {
     const dataFromFrontend = req.body;
-    tasks[dataFromFrontend.id] = {
-        id: dataFromFrontend.id,
+    const uuidTask = uuidv4();
+    req.context.models.tasks[uuidTask] = {
+        id: uuidTask,
         name: dataFromFrontend.taskName,
-        description: dataFromFrontend.taskDescription
+        description: dataFromFrontend.taskDescription,
+        done: dataFromFrontend.done
     };
-    console.log('Data received from front-end:', dataFromFrontend);
+    console.log('Data received from front-end:', dataFromFrontend, uuidTask);
 
-    // Process the data or send a response back to the front end
-    res.json({ message: 'Data received successfully!' });
+    res.json({ message: 'Data received successfully!', id: uuidTask});
 });
 
-
 app.get('/tasks', (req, res) => {
-    return res.json(Object.values(tasks));
+    return res.json(Object.values(req.context.models.tasks));
 });
 
 app.get('/tasks/:id', (req, res) => {
-    return res.send(tasks[req.params.id]);
+    return res.send(req.context.models.tasks[req.params.id]);
 });
 
-// app.get('/api/data', (req, res) => {
-//     const responseData = {
-//         message: 'Hello from the backend!',
-//         tasks: [{ name: 'task1', description: 'description1' }, { name: 'task2', description: 'description2' }]
-//     };
-//     res.json(responseData);
-// });
+app.put('/tasks/:id', (req, res) => {
+    const dataFromFrontend = req.body;
+    req.context.models.tasks[req.params.id].done = dataFromFrontend.done;
+    console.log('Data received from front-end:', dataFromFrontend);
+
+    res.json({ message: 'Data received successfully!' });
+});
+

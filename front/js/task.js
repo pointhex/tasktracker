@@ -21,8 +21,24 @@ export default class Task {
       event.dataTransfer.setData('text/plain', this.div.id)
       console.log('dragstart');
     });
+    
     this.div.addEventListener('dragend', (event) => {
-      console.log('dragend' + this.div.parentElement.id);
+      console.log('dragend ' + this.div.parentElement.id);
+
+      fetch(`http://localhost:3000/tasks/${this.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ done: this.div.parentElement.id === 'DoneList' }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Response from backend:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     });
   }
 

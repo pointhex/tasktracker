@@ -2,7 +2,7 @@ import Task from './task.js';
 // import { v4 as uuidv4 } from 'https://esm.sh/uuid';
 // const { v4 } = require('uuid');
 
-var numberOfTasks = 2;
+var numberOfTasks = 3;
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
@@ -25,9 +25,8 @@ window.AddTaskFunc = function () {
     const taskDescriptionInput = document.getElementById('TaskDescription');
     const taskName = taskNameInput.value || 'Task' + numberOfTasks++;
     const taskDescription = taskDescriptionInput.value || 'Task' + numberOfTasks;
-
-    const task = new Task('ToDoList', taskName, 'task' + numberOfTasks, numberOfTasks);
-    const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false, id: task.id };
+    
+    const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false };
 
     fetch('http://localhost:3000/tasks', {
         method: 'POST',
@@ -39,6 +38,7 @@ window.AddTaskFunc = function () {
         .then(response => response.json())
         .then(data => {
             console.log('Response from backend:', data);
+            new Task('ToDoList', taskName, 'task' + numberOfTasks, data.id);
         })
         .catch(error => {
             console.error('Error:', error);
