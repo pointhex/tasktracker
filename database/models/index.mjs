@@ -1,8 +1,19 @@
-let tasks = {
-    1: { id: '1', name: 'task1', description: 'description1', done: false },
-    2: { id: '2', name: 'task2', description: 'description2', done: true }
+import Sequelize from 'sequelize';
+
+import getTaskModel from './tasks.mjs';
+
+const sequelize = new Sequelize(
+  process.env.DATABASE || 'postgres',
+  process.env.DATABASE_USER || 'postgres',
+  process.env.DATABASE_PASSWORD || '',
+  {
+    dialect: 'postgres',
+  },
+);
+
+const models = {
+  Task: getTaskModel(sequelize, Sequelize)
 };
 
-export default {
-    tasks
-};
+export { sequelize };
+export default models;

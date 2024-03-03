@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import models, { sequelize } from '../database/models/index.mjs';
 
 import taskRouter from './routes/tasks.mjs';
 
@@ -20,7 +21,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../front', '/index.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+sequelize.sync().then(() => {
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
 });
+
+// app.listen(port, () => {
+//     console.log(`Server is running on http://localhost:${port}`);
+// });
 
