@@ -12,34 +12,59 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const dataFromFrontend = req.body;
     const uuidTask = uuidv4();
-    req.context.models.tasks[uuidTask] = {
-        id: uuidTask,
-        name: dataFromFrontend.taskName,
-        description: dataFromFrontend.taskDescription,
-        done: dataFromFrontend.done
-    };
     console.log('Data received from front-end:', dataFromFrontend, uuidTask);
+    try {
+        await req.context.models.Task.create({
+            id: uuidTask,
+            name: dataFromFrontend.taskName,
+            description: dataFromFrontend.taskDescription,
+            done: dataFromFrontend.done
+        });
 
-    res.json({ message: 'Data received successfully!', id: uuidTask });
+        res.json({ message: 'Data received successfully!', id: uuidTask });
+    } catch (error) {
+        console.error('Error:', error);
+    }
+
 });
 
-router.get('/', (req, res) => {
-    return res.json(Object.values(req.context.models.tasks));
+router.get('/', async (req, res) => {
+    console.log('Data sent to front-end:');
+    try {
+        await req.context.models.Task.findAll().then((tasks) => {
+            res.json(tasks);
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
 });
 
-router.get('/:id', (req, res) => {
-    return res.send(req.context.models.tasks[req.params.id]);
+router.get('/:id', async (req, res) => {
+    await req.context.models.Task.findTaskById(req.params.id).then((task) => {
+        res.json(task);
+    });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
     const dataFromFrontend = req.body;
-    req.context.models.tasks[req.params.id].done = dataFromFrontend.done;
     console.log('Data received from front-end:', dataFromFrontend);
+    try {
+        await req.context.models.Task.update({
+            done: dataFromFrontend.done
+        }, {
+            where: {
+                id: req.params.id
+            }
+        });
+        return res.json({ message: 'Data received successfully!' });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.json({ message: 'Error updating data!' });
+    }
 
-    res.json({ message: 'Data received successfully!' });
 });
 
 export default router;
