@@ -1,8 +1,6 @@
 import Task from './task.js';
 
 var numberOfTasks = 3;
-const serverIP = process.env.SERVER_IP;
-const serverPORT = process.env.PORT;
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
@@ -28,7 +26,7 @@ window.AddTaskFunc = function () {
     
     const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false };
 
-    fetch('http://${serverIP}:${serverPORT}/tasks', {
+    fetch('/tasks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +47,7 @@ window.AddTaskFunc = function () {
 document.addEventListener('DOMContentLoaded', requestData);
 
 function requestData() {
-    fetch('http://${serverIP}:${serverPORT}/tasks')
+    fetch('/tasks')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
