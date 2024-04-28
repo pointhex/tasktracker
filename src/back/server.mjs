@@ -8,7 +8,8 @@ import taskRouter from './routes/tasks.mjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
+const serverIP = process.env.SERVER_IP;
 
 app.use(express.static(path.join(__dirname, '../front')));
 app.use(express.json());
@@ -23,11 +24,7 @@ app.get('/', (req, res) => {
 
 sequelize.sync().then(() => {
     app.listen(port, () => {
-        console.log(`Server is running on http://localhost:${port}`);
+        console.log(`Server is running on http://${serverIP}:${port}`);
     });
 });
-
-// app.listen(port, () => {
-//     console.log(`Server is running on http://localhost:${port}`);
-// });
 

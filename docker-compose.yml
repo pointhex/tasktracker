@@ -18,6 +18,9 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_HOST: postgres
+      DB_PORT: 5432
+      SERVER_IP: localhost
+      PORT: 3000
     depends_on:
       - postgres
     ports:
