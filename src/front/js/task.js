@@ -24,10 +24,8 @@ export default class Task {
     
     this.div.addEventListener('dragend', (event) => {
       console.log('dragend ' + this.div.parentElement.id);
-      const serverIP = process.env.SERVER_IP;
-      const serverPORT = process.env.PORT;
 
-      fetch(`http://${serverIP}:${serverPORT}/tasks/${this.id}`, {
+      fetch(`/tasks/${this.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
