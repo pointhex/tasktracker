@@ -1,8 +1,8 @@
 import Task from './task.js';
-// import { v4 as uuidv4 } from 'https://esm.sh/uuid';
-// const { v4 } = require('uuid');
 
 var numberOfTasks = 3;
+const serverIP = process.env.SERVER_IP;
+const serverPORT = process.env.PORT;
 
 function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
@@ -28,7 +28,7 @@ window.AddTaskFunc = function () {
     
     const dataToSend = { taskName: taskName, taskDescription: taskDescription, done: false };
 
-    fetch('http://localhost:3000/tasks', {
+    fetch('http://${serverIP}:${serverPORT}/tasks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ window.AddTaskFunc = function () {
 document.addEventListener('DOMContentLoaded', requestData);
 
 function requestData() {
-    fetch('http://localhost:3000/tasks')
+    fetch('http://${serverIP}:${serverPORT}/tasks')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
